@@ -4,16 +4,6 @@ class _Pagination
 	var $next, $prev, $separator, $fullsteps;
 	
 	function __construct(){
-		$this->host = "localhost"; 
-	
-  		$this->user = "atec"; 
-  		$this->pass = "at10.admin";
-		
-  		$this->database = "admiral";  
-		//echo $this->database;
-  		$this->link = mysql_connect($this->host, $this->user, $this->pass);
-  		mysql_select_db($this->database);
-		 
 		$this->next=">";
 		$this->prev="<";
 		$this->separator=" | ";

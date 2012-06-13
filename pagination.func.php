@@ -1,5 +1,33 @@
 <?
-function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parametri="", $nx=">", $pv="<", $separatore = " | ", $puntini = " ... ", $pagina_start = "", $ajax_url="", $ajax_res="")
+class _Pagination
+{	
+	var $next, $prev, $separator, $fullsteps;
+	
+	function __construct(){
+		$this->host = "localhost"; 
+	
+  		$this->user = "atec"; 
+  		$this->pass = "at10.admin";
+		
+  		$this->database = "admiral";  
+		//echo $this->database;
+  		$this->link = mysql_connect($this->host, $this->user, $this->pass);
+  		mysql_select_db($this->database);
+		 
+		$this->next=">";
+		$this->prev="<";
+		$this->separator=" | ";
+		$this->fullsteps=" ... ";
+	}
+	
+	function set_arrows($next=">", $prev="<", $separator = " | ", $fullsteps = " ... "){
+		$this->next=$next;
+		$this->prev=$prev;
+		$this->separator=$separator;
+		$this->fullsteps=$fullsteps;
+	}
+	
+	function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parametri="", $pagina_start = "", $ajax_url="", $ajax_res="")
     {
         $max_righe = $maxrighe;
         $query = $testo_query;
@@ -32,21 +60,21 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
             if ($pagina_iniziale == 1) {
 				if ($method=="POST" || $method=="ajax")
 				{
-                	$previous = "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla pagina precedente\"> ".$pv." </a>";
+                	$previous = "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla pagina precedente\"> ".$this->prev." </a>";
 				} else
 				if ($method=="GET")
 				{
-                	$previous = "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla pagina precedente\"> ".$pv." </a>";
+                	$previous = "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla pagina precedente\"> ".$this->prev." </a>";
 				}
             } else {
                 $previouspage = $pagina_iniziale;
 				if ($method=="POST" || $method=="ajax")
 				{
-                	$previous = "<a href=\"javascript:jumpToOffset(" . $previouspage . ")\" title=\"Vai alla pagina precedente\"> ".$pv." </a>";
+                	$previous = "<a href=\"javascript:jumpToOffset(" . $previouspage . ")\" title=\"Vai alla pagina precedente\"> ".$this->prev." </a>";
 				} else
 				if ($method=="GET")
 				{
-                	$previous = "<a href=\"".$_SERVER['PHP_SELF']."?page=".$previouspage."&".$parametri."\" title=\"Vai alla pagina precedente\"> ".$pv." </a>";
+                	$previous = "<a href=\"".$_SERVER['PHP_SELF']."?page=".$previouspage."&".$parametri."\" title=\"Vai alla pagina precedente\"> ".$this->prev." </a>";
 				}
                 
             }
@@ -70,22 +98,22 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
         if ($PaginaDiPartenza == $numlink - 1) {
 			if ($method=="POST" || $method=="ajax")
 				{
-                	$num .= "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla prima pagina\">1</a>" . $separatore;
+                	$num .= "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla prima pagina\">1</a>" . $this->separator;
 				} else
 				if ($method=="GET")
 				{
-                	$num.= "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla prima pagina\">1</a>". $separatore;
+                	$num.= "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla prima pagina\">1</a>". $this->separator;
 				}
             
         }
         if ($PaginaDiPartenza > $numlink - 1) {
             if ($method=="POST" || $method=="ajax")
 				{
-                	$num .= "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla prima pagina\">1</a>" . $puntini;
+                	$num .= "<a href=\"javascript:jumpToOffset(1)\" title=\"Vai alla prima pagina\">1</a>" . $this->fullsteps;
 				} else
 				if ($method=="GET")
 				{
-                	$num.= "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla prima pagina\">1</a>" . $puntini;
+                	$num.= "<a href=\"".$_SERVER['PHP_SELF']."?page=1&".$parametri."\" title=\"Vai alla prima pagina\">1</a>" . $this->fullsteps;
 				};
         }
         //Se il totale delle pagine è uguale a 0
@@ -98,7 +126,7 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
                     $num = "";
                 }
                 if ($pagina != $tot_pages && $pagina != $UltimoLink + 1) {
-                    $num .= $separatore;
+                    $num .= $this->separator;
                 }
             }
             if ($p != $pagina_iniziale && $p < $tot_pages) {
@@ -116,7 +144,7 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
 					
 					if ($pagina != $tot_pages && $pagina != $UltimoLink + 1) 
 					{
-                    	$num .= $separatore;
+                    	$num .= $this->separator;
                 	}
 				}
             }
@@ -125,22 +153,22 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
         if ($UltimoLink == $tot_pages - $numlink) {
 			 if ($method=="POST" || $method=="ajax")
 					{
-                		$num .= $separatore . "<a href=\"javascript:jumpToOffset(" . $tot_pages . ")\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
+                		$num .= $this->separator . "<a href=\"javascript:jumpToOffset(" . $tot_pages . ")\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
 					} else
 					if ($method=="GET")
 					{
-                		$num .= $separatore . "<a href=\"".$_SERVER['PHP_SELF']."?page=".$tot_pages."&".$parametri."\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
+                		$num .= $this->separator . "<a href=\"".$_SERVER['PHP_SELF']."?page=".$tot_pages."&".$parametri."\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
 					};
             
         }
         if ($UltimoLink < $tot_pages - $numlink) {
 			 if ($method=="POST" || $method=="ajax")
 					{
-                		$num .= $puntini . "<a href=\"javascript:jumpToOffset(" . $tot_pages . ")\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
+                		$num .= $this->fullsteps . "<a href=\"javascript:jumpToOffset(" . $tot_pages . ")\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
 					} else
 					if ($method=="GET")
 					{
-                		$num.= $puntini ."<a href=\"".$_SERVER['PHP_SELF']."?page=".$tot_pages."&".$parametri."\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
+                		$num.= $this->fullsteps ."<a href=\"".$_SERVER['PHP_SELF']."?page=".$tot_pages."&".$parametri."\" title=\"Vai all'ultima pagina\">" . $tot_pages . "</a>";
 					};
             
         }
@@ -151,11 +179,11 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
             $nextpage = $pagina_iniziale + 2;
 			if ($method=="POST" || $method=="ajax")
 					{
-                		$next = "<a href=\"javascript:jumpToOffset(" . $nextpage . ")\" title=\"Vai alla pagina successiva\"> ".$nx." </a>";
+                		$next = "<a href=\"javascript:jumpToOffset(" . $nextpage . ")\" title=\"Vai alla pagina successiva\"> ".$this->next." </a>";
 					} else
 					if ($method=="GET")
 					{
-                		$next = "<a href=\"".$_SERVER['PHP_SELF']."?page=".$nextpage."&".$parametri."\" title=\"Vai alla pagina successiva\"> ".$nx." </a>";
+                		$next = "<a href=\"".$_SERVER['PHP_SELF']."?page=".$nextpage."&".$parametri."\" title=\"Vai alla pagina successiva\"> ".$this->next." </a>";
 					};
             
         }
@@ -231,4 +259,5 @@ function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parame
 		
        
     }
+}
 ?>

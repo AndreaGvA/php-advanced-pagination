@@ -1,6 +1,6 @@
 PHP ADVANCED PAGINATION
 ========================
-Demo: [BASIC DEMO](http://www.smartgap.it/repos/phpAdvancedPagination/basic.php) \n
+Demo: [BASIC DEMO](http://www.smartgap.it/repos/phpAdvancedPagination/basic.php) 
 
 Demo: [SET ARROWS](http://www.smartgap.it/repos/phpAdvancedPagination/set_arrows.php)
 

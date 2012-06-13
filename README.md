@@ -2,7 +2,7 @@ PHP ADVANCED PAGINATION
 ========================
 
 Basic Usage:
-```php
+```PHP
 $PG=new _Pagination();
 
 $DATA=$PG->paginazione($number_lines_per_page, $sql_query_no_limit, $_number_of_links_before_and_after_selected_page) or die(mysql_error());

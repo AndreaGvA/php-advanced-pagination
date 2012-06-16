@@ -9,7 +9,6 @@ class _Pagination
 		$this->separator=" | ";
 		$this->fullsteps=" ... ";
 	}
-	function ajax(){}
 	
 	function set_arrows($next=">", $prev="<", $separator = " | ", $fullsteps = " ... "){
 		$this->next=$next;

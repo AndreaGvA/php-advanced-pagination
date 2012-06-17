@@ -2,6 +2,7 @@
 class _Pagination
 {	
 	var $next, $prev, $separator, $fullsteps;
+	var $ajax_url, $ajax_res;
 	
 	function __construct(){
 		$this->next=">";
@@ -17,7 +18,12 @@ class _Pagination
 		$this->fullsteps=$fullsteps;
 	}
 	
-	function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parametri="", $pagina_start = "", $ajax_url="", $ajax_res="")
+	function setAjaxFields($ajax_url="", $ajax_res=""){
+		$this->ajax_url=$ajax_url;
+		$this->ajax_res=$ajax_res;
+	}
+	
+	function paginazione ($maxrighe, $testo_query, $numlink, $method="POST", $parametri="", $pagina_start = "")
     {
         $max_righe = $maxrighe;
         $query = $testo_query;
@@ -228,7 +234,7 @@ class _Pagination
 							// ready....set....go!!!!! ;)    
 							if( proceed )
 							 {
-							   $('$ajax_res').load('$ajax_url', data, 
+							   $('$this->ajax_res').load('$this->ajax_url', data, 
 							   $('#loading').ajaxStart(function(){ 
           $(this).html(\"<img src='img/loading.gif' height='15' />\");
       })
